@@ -1,5 +1,5 @@
 import {useState,useEffect} from 'react';
-import {projectStorage} from '../firebase/config';
+import {projectStorage,projectFireStore, timestamp} from '../firebase/config';
 
 //used for handling file uploads.
 //return a useful values about the upload
@@ -17,7 +17,7 @@ const useStorage = (file) =>{
     useEffect(()=>{
         //references
         const storageRef = projectStorage.ref(file.name);
-
+        const collectionRef = projectFireStore.collection('images');
         storageRef.put(file).on('state_changed',(snap)=>{
             let percentage = (snap.bytesTransferred/snap.totalBytes)*100;
             setProgress(percentage);
@@ -28,6 +28,8 @@ const useStorage = (file) =>{
         //what is the point of it, if we arent overwriting the original url state?
         async () =>{
             const url = await storageRef.getDownloadURL();
+            const createdAt = timestamp();
+            collectionRef.add({url:url,createdAt:createdAt});
             setUrl(url);
         });
 
