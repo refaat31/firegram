@@ -1,13 +1,20 @@
-import React from 'react'
+import React from 'react';
+import {motion} from 'framer-motion';
 
 function Modal({selectedImg,setSelectedImg}) {
     const handleClick = (e) =>{
         if(e.target.classList.contains('backdrop')) setSelectedImg(null);
     }
     return (
-        <div className="backdrop" onClick={handleClick}>
-            <img src={selectedImg} alt="enlarged"></img>
-        </div>
+        <motion.div className="backdrop" onClick={handleClick}
+            initial = {{opacity:0}}
+            animate = {{opacity:1}}
+        >
+            <motion.img src={selectedImg} alt="enlarged"
+                initial= {{y:"-100vh"}}
+                animate = {{y:"0vh"}}
+            />
+        </motion.div>
     )
 }
 
